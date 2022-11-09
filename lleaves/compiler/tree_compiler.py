@@ -5,6 +5,7 @@ import llvmlite.ir
 
 from lleaves.compiler.ast import parse_to_ast
 from lleaves.compiler.codegen import gen_forest
+from lleaves.compiler.debug_utils import add_version_info
 
 
 def compile_to_module(
@@ -13,12 +14,16 @@ def compile_to_module(
     finline=True,
     raw_score=False,
     froot_func_name="forest_root",
+    fversion_func_name=None,
 ):
     forest = parse_to_ast(file_path)
     forest.raw_score = raw_score
 
     ir = llvmlite.ir.Module(name="forest")
     gen_forest(forest, ir, fblocksize, froot_func_name)
+
+    if fversion_func_name is not None:
+        add_version_info(ir, fversion_func_name)
 
     ir.triple = llvm.get_process_triple()
     module = llvm.parse_assembly(str(ir))
