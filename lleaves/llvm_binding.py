@@ -15,11 +15,12 @@ def _initialize_llvm():
 
 def _get_target_machine(fcodemodel="large"):
     target = llvm.Target.from_triple(llvm.get_process_triple())
-    try:
-        # LLVM raises if features cannot be detected
-        features = llvm.get_host_cpu_features().flatten()
-    except RuntimeError:
-        features = ""
+    # try:
+    #     # LLVM raises if features cannot be detected
+    #     features = llvm.get_host_cpu_features().flatten()
+    # except RuntimeError:
+    #     features = ""
+    features = '+64bit,+adx,+aes,-amx-bf16,-amx-int8,-amx-tile,+avx,+avx2,-avx512bf16,-avx512bitalg,-avx512bw,-avx512cd,-avx512dq,-avx512er,-avx512f,-avx512ifma,-avx512pf,-avx512vbmi,-avx512vbmi2,-avx512vl,-avx512vnni,-avx512vp2intersect,-avx512vpopcntdq,+bmi,+bmi2,-cldemote,-clflushopt,-clwb,-clzero,+cmov,+cx16,+cx8,-enqcmd,+f16c,+fma,-fma4,+fsgsbase,+fxsr,-gfni,+invpcid,-lwp,+lzcnt,+mmx,+movbe,-movdir64b,-movdiri,-mwaitx,+pclmul,-pconfig,-pku,+popcnt,-prefetchwt1,+prfchw,-ptwrite,-rdpid,+rdrnd,+rdseed,+rtm,+sahf,-serialize,-sgx,-sha,-shstk,+sse,+sse2,+sse3,+sse4.1,+sse4.2,-sse4a,+ssse3,-tbm,-tsxldtrk,-vaes,-vpclmulqdq,-waitpkg,-wbnoinvd,-xop,+xsave,-xsavec,+xsaveopt,-xsaves'
 
     # large codemodel is necessary for large, ~1000 tree models.
     # for smaller models "default" codemodel would be faster.
